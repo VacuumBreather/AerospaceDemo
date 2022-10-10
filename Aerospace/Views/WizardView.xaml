@@ -16,6 +16,7 @@
     mc:Ignorable="d">
     <xctk:Wizard
         cm:Message.Attach="[Event Finish] = [Action TryCloseAsync('true')]"
+        Background="{DynamicResource MaterialDesignPaper}"
         FinishButtonClosesWindow="False"
         HelpButtonVisibility="Hidden"
         PageChanged="Wizard_OnPageChanged">
