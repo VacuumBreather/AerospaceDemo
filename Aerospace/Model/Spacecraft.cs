@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using System.Windows.Documents;
 
-namespace Aerospace;
+namespace Aerospace.Model;
 
 internal struct Spacecraft
 {

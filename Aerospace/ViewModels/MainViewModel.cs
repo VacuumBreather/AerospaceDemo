@@ -6,14 +6,30 @@ using Caliburn.Micro;
 
 namespace Aerospace.ViewModels;
 
-internal class MainViewModel : Screen
+internal class MainViewModel : Conductor<Screen>
 {
-    public Model Model { get; private set; }
+    private readonly WizardViewModel _wizardViewModel;
+
+    public MainViewModel(WizardViewModel wizardViewModel)
+    {
+        _wizardViewModel = wizardViewModel;
+    }
+
+    public Model.Model Model { get; private set; }
 
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         var filename = Path.Combine("data", "data.json");
         await using var openStream = File.OpenRead(filename);
-        Model = await JsonSerializer.DeserializeAsync<Model>(openStream, cancellationToken: cancellationToken);
+        Model = await JsonSerializer.DeserializeAsync<Model.Model>(openStream, cancellationToken: cancellationToken);
+    }
+
+    protected override Task OnActivateAsync(CancellationToken cancellationToken)
+    {
+        _wizardViewModel.Model = Model;
+
+        ActiveItem = _wizardViewModel;
+
+        return base.OnActivateAsync(cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Aerospace;
+namespace Aerospace.Model;
 
 internal struct Model
 {

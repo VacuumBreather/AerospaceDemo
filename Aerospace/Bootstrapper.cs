@@ -30,6 +30,7 @@ internal class Bootstrapper : BootstrapperBase
             .Where(type => !string.IsNullOrWhiteSpace(type.Namespace) && type.Namespace.EndsWith("ViewModels"))
             .Where(type => type.GetInterface(nameof(INotifyPropertyChanged)) != null)
             .AsSelf()
+            .AsImplementedInterfaces()
             .InstancePerDependency();
 
         // Register views
