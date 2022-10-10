@@ -13,13 +13,21 @@
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
     mc:Ignorable="d">
     <DockPanel>
-        <Button
-            x:Name="CreateJourneyAsync"
+        <StackPanel
             HorizontalAlignment="Center"
-            DockPanel.Dock="Bottom">
-            Create Journey
-        </Button>
-        <ListView ItemsSource="{Binding ActiveJourneys}">
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button x:Name="CreateJourneyAsync" HorizontalAlignment="Center">
+                Create Journey
+            </Button>
+            <Button x:Name="LoadJourneyAsync" HorizontalAlignment="Center">
+                Load Journey
+            </Button>
+            <Button x:Name="SaveJourneyAsync" HorizontalAlignment="Center">
+                Save Journey
+            </Button>
+        </StackPanel>
+        <ListView ItemsSource="{Binding ActiveJourneys}" SelectedItem="{Binding SelectedJourney, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SpacecraftJourney}">
                     <TextBlock Text="{Binding Name, Mode=OneWay}" />
