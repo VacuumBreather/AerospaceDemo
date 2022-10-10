@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />
     <PackageReference Include="Caliburn.Micro" Version="4.0.212" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.4.0" />
   </ItemGroup>
 
 </Project>

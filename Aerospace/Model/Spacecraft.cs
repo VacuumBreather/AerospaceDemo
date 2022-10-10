@@ -22,4 +22,6 @@ internal struct Spacecraft
 
     [JsonPropertyName("asteroidDeflector")]
     public bool MaxAsteroidDeflector { get; set; }
+
+    public override string ToString() => Name;
 }

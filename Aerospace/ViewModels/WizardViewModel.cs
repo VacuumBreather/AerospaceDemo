@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Aerospace.Model;
 using Caliburn.Micro;
 
 namespace Aerospace.ViewModels;
@@ -17,24 +18,30 @@ internal class WizardViewModel : Conductor<IWizardStepViewModel>
 
     public Model.Model Model { get; set; }
 
+    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+    {
+        foreach (var step in _wizardSteps) step.Model = Model;
+
+        return base.OnInitializeAsync(cancellationToken);
+    }
+
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        var currentStep = _wizardSteps.First();
+        var journey = new SpacecraftJourney(Model);
 
-        currentStep.Model = Model;
+        foreach (var step in _wizardSteps) step.Journey = journey;
 
-        ActiveItem = currentStep;
+        ActiveItem = _wizardSteps.First();
 
         return base.OnActivateAsync(cancellationToken);
     }
 
     public void Cancel()
     {
-        var currentStep = _wizardSteps.First();
+        ActiveItem = _wizardSteps.First();
+        var journey = new SpacecraftJourney(Model);
 
-        currentStep.Model = Model;
-
-        ActiveItem = currentStep;
+        foreach (var step in _wizardSteps) step.Journey = journey;
     }
 
     public void Next()
@@ -42,7 +49,6 @@ internal class WizardViewModel : Conductor<IWizardStepViewModel>
         var currentIndex = _wizardSteps.IndexOf(ActiveItem);
         var nextIndex = (currentIndex + 1) % _wizardSteps.Count;
         var currentStep = _wizardSteps[nextIndex];
-        currentStep.Model = Model;
 
         ActiveItem = currentStep;
     }
@@ -52,7 +58,6 @@ internal class WizardViewModel : Conductor<IWizardStepViewModel>
         var currentIndex = _wizardSteps.IndexOf(ActiveItem);
         var nextIndex = (currentIndex + _wizardSteps.Count - 1) % _wizardSteps.Count;
         var currentStep = _wizardSteps[nextIndex];
-        currentStep.Model = Model;
 
         ActiveItem = currentStep;
     }

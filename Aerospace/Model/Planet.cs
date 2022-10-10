@@ -24,4 +24,6 @@ internal struct Planet
 
     [JsonPropertyName("isDwarf")]
     public bool IsDwarf { get; set; }
+
+    public override string ToString() => Name;
 }
