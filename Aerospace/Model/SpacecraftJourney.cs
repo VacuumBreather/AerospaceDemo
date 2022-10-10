@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Caliburn.Micro;
 
 namespace Aerospace.Model;
@@ -11,11 +10,19 @@ internal class SpacecraftJourney : PropertyChangedBase
 {
     private Spacecraft _spacecraft;
     private int _numPassengers;
+    private string _name;
 
     public SpacecraftJourney(Model model)
     {
+        _name = "New Journey";
         _spacecraft = model.Spacecrafts.First();
         Route.Add(model.Planets.First(planet => planet.Index == 3));
+    }
+
+    public string Name
+    {
+        get => _name;
+        set => Set(ref _name, value);
     }
 
     public Spacecraft Spacecraft

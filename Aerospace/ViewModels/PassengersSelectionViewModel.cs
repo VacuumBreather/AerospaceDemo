@@ -5,10 +5,6 @@ namespace Aerospace.ViewModels;
 
 internal class PassengersSelectionViewModel : WizardStepViewModelBase
 {
-    public PassengersSelectionViewModel() : base(1)
-    {
-    }
-
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
     {
         if (Journey!.NumPassengers > Journey!.Spacecraft.Capacity)

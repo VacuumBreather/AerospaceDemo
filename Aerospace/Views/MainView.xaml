@@ -5,9 +5,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Aerospace"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Aerospace.Model"
+    xmlns:viewModels="clr-namespace:Aerospace.ViewModels"
     Title="MainView"
     Width="800"
     Height="450"
+    d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
     mc:Ignorable="d">
-    <ContentControl x:Name="ActiveItem" />
+    <DockPanel>
+        <Button
+            x:Name="CreateJourneyAsync"
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Bottom">
+            Create Journey
+        </Button>
+        <ListView ItemsSource="{Binding ActiveJourneys}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type model:SpacecraftJourney}">
+                    <TextBlock Text="{Binding Name, Mode=OneWay}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </DockPanel>
 </Window>

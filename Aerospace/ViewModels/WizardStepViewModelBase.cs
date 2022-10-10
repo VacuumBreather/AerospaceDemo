@@ -8,13 +8,6 @@ internal abstract class WizardStepViewModelBase : Screen, IWizardStepViewModel
     private SpacecraftJourney? _journey;
     private Model.Model _model;
 
-    protected WizardStepViewModelBase(int index)
-    {
-        Index = index;
-    }
-
-    public int Index { get; init; }
-
     public Model.Model Model
     {
         get => _model;

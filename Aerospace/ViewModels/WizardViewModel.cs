@@ -1,64 +1,72 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Aerospace.Model;
 using Caliburn.Micro;
 
 namespace Aerospace.ViewModels;
 
-internal class WizardViewModel : Conductor<IWizardStepViewModel>
+internal class WizardViewModel : Conductor<IWizardStepViewModel>.Collection.OneActive
 {
-    private readonly IList<IWizardStepViewModel> _wizardSteps;
+    private SpacecraftJourney? _journey;
+    private Model.Model _model;
 
-    public WizardViewModel(IEnumerable<IWizardStepViewModel> wizardSteps)
+    public WizardViewModel(NameSelectionViewModel nameSelection, ShipSelectionViewModel shipSelection,
+        PassengersSelectionViewModel passengersSelection,
+        RouteSelectionViewModel routeSelection)
     {
-        _wizardSteps = wizardSteps.OrderBy(step => step.Index).ToList();
+        NameSelection = nameSelection;
+        ShipSelection = shipSelection;
+        PassengersSelection = passengersSelection;
+        RouteSelection = routeSelection;
     }
 
-    public Model.Model Model { get; set; }
+    public Model.Model Model
+    {
+        get => _model;
+        set => Set(ref _model, value);
+    }
+
+    public SpacecraftJourney? Journey
+    {
+        get => _journey;
+        private set => Set(ref _journey, value);
+    }
+
+    public NameSelectionViewModel NameSelection { get; }
+
+    public ShipSelectionViewModel ShipSelection { get; }
+
+    public PassengersSelectionViewModel PassengersSelection { get; }
+
+    public RouteSelectionViewModel RouteSelection { get; }
+
+    public void ActivateStep(object step)
+    {
+        if (step is IWizardStepViewModel wizardStep)
+            ActiveItem = wizardStep;
+        else
+            ActiveItem = ShipSelection;
+    }
 
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        foreach (var step in _wizardSteps) step.Model = Model;
+        NameSelection.Model = Model;
+        ShipSelection.Model = Model;
+        PassengersSelection.Model = Model;
+        RouteSelection.Model = Model;
 
         return base.OnInitializeAsync(cancellationToken);
     }
 
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        var journey = new SpacecraftJourney(Model);
+        Journey = new SpacecraftJourney(Model);
 
-        foreach (var step in _wizardSteps) step.Journey = journey;
+        NameSelection.Journey = Journey;
+        ShipSelection.Journey = Journey;
+        PassengersSelection.Journey = Journey;
+        RouteSelection.Journey = Journey;
 
-        ActiveItem = _wizardSteps.First();
-
-        return base.OnActivateAsync(cancellationToken);
-    }
-
-    public void Cancel()
-    {
-        ActiveItem = _wizardSteps.First();
-        var journey = new SpacecraftJourney(Model);
-
-        foreach (var step in _wizardSteps) step.Journey = journey;
-    }
-
-    public void Next()
-    {
-        var currentIndex = _wizardSteps.IndexOf(ActiveItem);
-        var nextIndex = (currentIndex + 1) % _wizardSteps.Count;
-        var currentStep = _wizardSteps[nextIndex];
-
-        ActiveItem = currentStep;
-    }
-
-    public void Back()
-    {
-        var currentIndex = _wizardSteps.IndexOf(ActiveItem);
-        var nextIndex = (currentIndex + _wizardSteps.Count - 1) % _wizardSteps.Count;
-        var currentStep = _wizardSteps[nextIndex];
-
-        ActiveItem = currentStep;
+        return base.OnInitializeAsync(cancellationToken);
     }
 }

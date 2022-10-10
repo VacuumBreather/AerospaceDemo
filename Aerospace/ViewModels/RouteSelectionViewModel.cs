@@ -9,10 +9,6 @@ internal class RouteSelectionViewModel : WizardStepViewModelBase
 {
     private Planet _selectedPlanet;
 
-    public RouteSelectionViewModel() : base(2)
-    {
-    }
-
     public Planet SelectedPlanet
     {
         get => _selectedPlanet;

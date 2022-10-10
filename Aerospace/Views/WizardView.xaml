@@ -2,21 +2,47 @@
     x:Class="Aerospace.Views.WizardView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:cm="http://caliburnmicro.com"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Aerospace.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Aerospace.ViewModels"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    Width="800"
+    Height="600"
+    d:DataContext="{d:DesignInstance viewModels:WizardViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <DockPanel Background="Red">
-        <StackPanel
-            HorizontalAlignment="Center"
-            DockPanel.Dock="Bottom"
-            Orientation="Horizontal">
-            <Button x:Name="Cancel">Cancel</Button>
-            <Button x:Name="Back">Back</Button>
-            <Button x:Name="Next">Next</Button>
-        </StackPanel>
-        <ContentControl x:Name="ActiveItem" />
-    </DockPanel>
+    <xctk:Wizard
+        cm:Message.Attach="[Event Finish] = [Action TryCloseAsync('true')]"
+        FinishButtonClosesWindow="False"
+        HelpButtonVisibility="Hidden"
+        PageChanged="Wizard_OnPageChanged">
+        <xctk:WizardPage
+            x:Name="Intro"
+            Title="Introduction"
+            Description="This wizard will guide you to the creation of a wonderful space journey." />
+        <xctk:WizardPage
+            x:Name="NameSelection"
+            Title="Name Selection"
+            Description="Please select a name for the journey."
+            PageType="Interior" />
+        <xctk:WizardPage
+            x:Name="ShipSelection"
+            Title="Ship Selection"
+            Description="Please select a spacecraft for the journey."
+            PageType="Interior" />
+        <xctk:WizardPage
+            x:Name="PassengersSelection"
+            Title="Passengers"
+            Description="Please select the number of passengers."
+            PageType="Interior" />
+        <xctk:WizardPage
+            x:Name="RouteSelection"
+            Title="Route"
+            CanFinish="True"
+            Description="Please select the planets the route is supposed to include."
+            PageType="Interior" />
+    </xctk:Wizard>
 </UserControl>
