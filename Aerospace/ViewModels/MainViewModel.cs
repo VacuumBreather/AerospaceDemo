@@ -1,11 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Aerospace.Model;
 using Caliburn.Micro;
+using Microsoft.Win32;
 
 namespace Aerospace.ViewModels;
 
@@ -48,12 +51,50 @@ internal class MainViewModel : Conductor<Screen>
 
     public async void LoadJourneyAsync()
     {
-        await Task.CompletedTask;
+        var openFileDialog = new OpenFileDialog
+        {
+            Title = "Save route",
+            DefaultExt = "json",
+            Filter = "json files (*.json)|*.json",
+            CheckFileExists = true,
+            CheckPathExists = true,
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        };
+
+        var result = openFileDialog.ShowDialog();
+
+        if (result == true)
+        {
+            string filename = openFileDialog.FileName;
+
+            await using var readStream = File.OpenRead(filename);
+            var journey = await JsonSerializer.DeserializeAsync<SpacecraftJourney>(readStream);
+
+            if (journey != null)
+                ActiveJourneys.Add(journey);
+        }
     }
 
     public async void SaveJourneyAsync()
     {
-        await Task.CompletedTask;
+        var saveFileDialog = new SaveFileDialog
+        {
+            Title = "Save route",
+            DefaultExt = "json",
+            Filter = "json files (*.json)|*.json",
+            CheckPathExists = true,
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        };
+
+        var result = saveFileDialog.ShowDialog();
+
+        if (result == true)
+        {
+            string filename = saveFileDialog.FileName;
+            
+            await using var writeStream = File.OpenWrite(filename);
+            await JsonSerializer.SerializeAsync(writeStream, SelectedJourney!);
+        }
     }
 
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
