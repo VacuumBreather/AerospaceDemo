@@ -7,48 +7,67 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aerospace.Model;
 using Caliburn.Micro;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 
 namespace Aerospace.ViewModels;
 
 internal class MainViewModel : Conductor<Screen>
 {
-    private readonly IWindowManager _windowManager;
-    private readonly WizardViewModel _wizardViewModel;
-    private SpacecraftJourney? _selectedJourney;
-    private JsonSerializerOptions? _serializationOptions;
+    #region Constants and Fields
+
+    private readonly IWindowManager windowManager;
+    private readonly WizardViewModel wizardViewModel;
+    private SpacecraftJourney? selectedJourney;
+    private JsonSerializerOptions? serializationOptions;
+
+    #endregion
+
+    #region Constructors and Destructors
 
     public MainViewModel(WizardViewModel wizardViewModel, IWindowManager windowManager)
     {
-        _wizardViewModel = wizardViewModel;
-        _windowManager = windowManager;
+        this.wizardViewModel = wizardViewModel;
+        this.windowManager = windowManager;
     }
 
+    #endregion
+
+    #region Public Properties
+
     public ObservableCollection<SpacecraftJourney> ActiveJourneys { get; } = new();
+
+    public bool CanSaveJourneyAsync => SelectedJourney is not null;
 
     public Model.Model Model { get; private set; }
 
     public SpacecraftJourney? SelectedJourney
     {
-        get => _selectedJourney;
+        get => selectedJourney;
         set
         {
-            Set(ref _selectedJourney, value);
+            Set(ref selectedJourney, value);
             NotifyOfPropertyChange(nameof(CanSaveJourneyAsync));
         }
     }
 
-    public bool CanSaveJourneyAsync => SelectedJourney is not null;
+    #endregion
 
+    #region Public Methods
+
+    [UsedImplicitly]
     public async void CreateJourneyAsync()
     {
-        var result = await _windowManager.ShowDialogAsync(_wizardViewModel);
+        bool? result = await windowManager.ShowDialogAsync(wizardViewModel);
 
-        if (result == true &&
-            _wizardViewModel.Journey is { } journey)
+        if ((result == true) &&
+            wizardViewModel.Journey is { } journey)
+        {
             ActiveJourneys.Add(journey);
+        }
     }
 
+    [UsedImplicitly]
     public async void LoadJourneyAsync()
     {
         var openFileDialog = new OpenFileDialog
@@ -61,21 +80,24 @@ internal class MainViewModel : Conductor<Screen>
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         };
 
-        var result = openFileDialog.ShowDialog();
+        bool? result = openFileDialog.ShowDialog();
 
         if (result == true)
         {
-            var filename = openFileDialog.FileName;
+            string filename = openFileDialog.FileName;
 
-            await using var readStream = File.OpenRead(filename);
+            await using FileStream readStream = File.OpenRead(filename);
 
-            var journey = await JsonSerializer.DeserializeAsync<SpacecraftJourney>(readStream, _serializationOptions);
+            var journey = await JsonSerializer.DeserializeAsync<SpacecraftJourney>(readStream, serializationOptions);
 
             if (journey != null)
+            {
                 ActiveJourneys.Add(journey);
+            }
         }
     }
 
+    [UsedImplicitly]
     public async void SaveJourneyAsync()
     {
         var saveFileDialog = new SaveFileDialog
@@ -87,25 +109,39 @@ internal class MainViewModel : Conductor<Screen>
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         };
 
-        var result = saveFileDialog.ShowDialog();
+        bool? result = saveFileDialog.ShowDialog();
 
         if (result == true)
         {
-            var filename = saveFileDialog.FileName;
+            string filename = saveFileDialog.FileName;
 
-            await using var writeStream = File.OpenWrite(filename);
-            await JsonSerializer.SerializeAsync(writeStream, SelectedJourney!, _serializationOptions);
+            await using FileStream writeStream = File.OpenWrite(filename);
+            await JsonSerializer.SerializeAsync(writeStream, SelectedJourney!, serializationOptions);
         }
+    }
+
+    #endregion
+
+    #region Protected Methods
+
+    protected override Task OnActivateAsync(CancellationToken cancellationToken)
+    {
+        if (SelectedJourney is null)
+        {
+            SelectedJourney = ActiveJourneys.FirstOrDefault();
+        }
+
+        return base.OnActivateAsync(cancellationToken);
     }
 
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        var filename = Path.Combine("data", "data.json");
-        await using var openStream = File.OpenRead(filename);
+        string filename = Path.Combine("data", "data.json");
+        await using FileStream openStream = File.OpenRead(filename);
         Model = await JsonSerializer.DeserializeAsync<Model.Model>(openStream, cancellationToken: cancellationToken);
-        _wizardViewModel.Model = Model;
+        wizardViewModel.Model = Model;
 
-        _serializationOptions = new JsonSerializerOptions
+        serializationOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
             Converters =
@@ -115,10 +151,5 @@ internal class MainViewModel : Conductor<Screen>
         };
     }
 
-    protected override Task OnActivateAsync(CancellationToken cancellationToken)
-    {
-        if (SelectedJourney is null) SelectedJourney = ActiveJourneys.FirstOrDefault();
-
-        return base.OnActivateAsync(cancellationToken);
-    }
+    #endregion
 }

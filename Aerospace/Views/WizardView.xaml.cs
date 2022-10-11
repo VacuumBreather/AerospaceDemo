@@ -1,32 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using Aerospace.ViewModels;
 using Xceed.Wpf.Toolkit;
 
 namespace Aerospace.Views
 {
     /// <summary>
-    /// Interaction logic for WizardView.xaml
+    ///     Interaction logic for WizardView.xaml
     /// </summary>
-    public partial class WizardView : UserControl
+    public partial class WizardView
     {
-        public WizardView()
-        {
-            InitializeComponent();
-        }
+        #region Event Handlers
 
         private void Wizard_OnPageChanged(object sender, RoutedEventArgs e)
         {
@@ -37,5 +20,7 @@ namespace Aerospace.Views
                 viewModel.ActiveItem = model;
             }
         }
+
+        #endregion
     }
 }

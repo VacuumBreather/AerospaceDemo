@@ -7,8 +7,14 @@ namespace Aerospace.ViewModels;
 
 internal class WizardViewModel : Conductor<IWizardStepViewModel>.Collection.OneActive
 {
-    private SpacecraftJourney? _journey;
-    private Model.Model _model;
+    #region Constants and Fields
+
+    private SpacecraftJourney? journey;
+    private Model.Model model;
+
+    #endregion
+
+    #region Constructors and Destructors
 
     public WizardViewModel(NameSelectionViewModel nameSelection, ShipSelectionViewModel shipSelection,
         PassengersSelectionViewModel passengersSelection,
@@ -20,43 +26,49 @@ internal class WizardViewModel : Conductor<IWizardStepViewModel>.Collection.OneA
         RouteSelection = routeSelection;
     }
 
-    public Model.Model Model
-    {
-        get => _model;
-        set => Set(ref _model, value);
-    }
+    #endregion
+
+    #region Public Properties
 
     public SpacecraftJourney? Journey
     {
-        get => _journey;
-        private set => Set(ref _journey, value);
+        get => journey;
+        private set => Set(ref journey, value);
+    }
+
+    public Model.Model Model
+    {
+        get => model;
+        set => Set(ref model, value);
     }
 
     public NameSelectionViewModel NameSelection { get; }
-
-    public ShipSelectionViewModel ShipSelection { get; }
 
     public PassengersSelectionViewModel PassengersSelection { get; }
 
     public RouteSelectionViewModel RouteSelection { get; }
 
+    public ShipSelectionViewModel ShipSelection { get; }
+
+    #endregion
+
+    #region Public Methods
+
     public void ActivateStep(object step)
     {
         if (step is IWizardStepViewModel wizardStep)
+        {
             ActiveItem = wizardStep;
+        }
         else
+        {
             ActiveItem = ShipSelection;
+        }
     }
 
-    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
-    {
-        NameSelection.Model = Model;
-        ShipSelection.Model = Model;
-        PassengersSelection.Model = Model;
-        RouteSelection.Model = Model;
+    #endregion
 
-        return base.OnInitializeAsync(cancellationToken);
-    }
+    #region Protected Methods
 
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
     {
@@ -69,4 +81,16 @@ internal class WizardViewModel : Conductor<IWizardStepViewModel>.Collection.OneA
 
         return base.OnInitializeAsync(cancellationToken);
     }
+
+    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+    {
+        NameSelection.Model = Model;
+        ShipSelection.Model = Model;
+        PassengersSelection.Model = Model;
+        RouteSelection.Model = Model;
+
+        return base.OnInitializeAsync(cancellationToken);
+    }
+
+    #endregion
 }

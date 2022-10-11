@@ -5,18 +5,26 @@ namespace Aerospace.ViewModels;
 
 internal abstract class WizardStepViewModelBase : Screen, IWizardStepViewModel
 {
-    private SpacecraftJourney? _journey;
-    private Model.Model _model;
+    #region Constants and Fields
 
-    public Model.Model Model
-    {
-        get => _model;
-        set => Set(ref _model, value);
-    }
+    private SpacecraftJourney? journey;
+    private Model.Model model;
+
+    #endregion
+
+    #region IWizardStepViewModel Implementation
 
     public SpacecraftJourney? Journey
     {
-        get => _journey;
-        set => Set(ref _journey, value);
+        get => journey;
+        set => Set(ref journey, value);
     }
+
+    public Model.Model Model
+    {
+        get => model;
+        set => Set(ref model, value);
+    }
+
+    #endregion
 }

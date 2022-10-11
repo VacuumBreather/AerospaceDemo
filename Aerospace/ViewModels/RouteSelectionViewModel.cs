@@ -7,18 +7,31 @@ namespace Aerospace.ViewModels;
 
 internal class RouteSelectionViewModel : WizardStepViewModelBase
 {
-    private Planet _selectedPlanet;
+    #region Constants and Fields
+
+    private Planet selectedPlanet;
+
+    #endregion
+
+    #region Public Properties
 
     public Planet SelectedPlanet
     {
-        get => _selectedPlanet;
+        get => selectedPlanet;
         set
         {
-            Set(ref _selectedPlanet, value);
+            Set(ref selectedPlanet, value);
 
-            if (SelectedPlanet.Index != Journey!.Route.Last().Index) Journey!.Route.Add(_selectedPlanet);
+            if (SelectedPlanet.Index != Journey!.Route.Last().Index)
+            {
+                Journey!.Route.Add(selectedPlanet);
+            }
         }
     }
+
+    #endregion
+
+    #region Protected Methods
 
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
     {
@@ -26,4 +39,6 @@ internal class RouteSelectionViewModel : WizardStepViewModelBase
 
         return base.OnActivateAsync(cancellationToken);
     }
+
+    #endregion
 }

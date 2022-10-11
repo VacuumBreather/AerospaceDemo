@@ -8,75 +8,116 @@ namespace Aerospace.ViewModels;
 
 internal class JourneyConverter : JsonConverter<SpacecraftJourney>
 {
-    private readonly Model.Model _model;
+    #region Constants and Fields
+
+    private readonly Model.Model model;
+
+    #endregion
+
+    #region Constructors and Destructors
 
     internal JourneyConverter(Model.Model model)
     {
-        _model = model;
+        this.model = model;
     }
 
-    public override SpacecraftJourney? Read(ref Utf8JsonReader reader, Type typeToConvert,
+    #endregion
+
+    #region Public Methods
+
+    public override SpacecraftJourney Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.StartObject) throw new JsonException();
+        if (reader.TokenType != JsonTokenType.StartObject)
+        {
+            throw new JsonException();
+        }
 
-        var journey = new SpacecraftJourney(_model);
+        var journey = new SpacecraftJourney(model);
         journey.Route.Clear();
 
         while (reader.Read())
         {
-            if (reader.TokenType == JsonTokenType.EndObject) return journey;
+            if (reader.TokenType == JsonTokenType.EndObject)
+            {
+                return journey;
+            }
 
-            if (reader.TokenType != JsonTokenType.PropertyName) throw new JsonException();
+            if (reader.TokenType != JsonTokenType.PropertyName)
+            {
+                throw new JsonException();
+            }
 
-            var propertyName = reader.GetString();
+            string? propertyName = reader.GetString();
 
             switch (propertyName)
             {
                 case "name":
                 {
                     reader.Read();
-                    var name = reader.GetString();
+                    string? name = reader.GetString();
 
-                    if (name is null) throw new JsonException();
+                    if (name is null)
+                    {
+                        throw new JsonException();
+                    }
 
                     journey.Name = name;
+
                     break;
                 }
                 case "spacecraft":
                 {
                     reader.Read();
-                    var spacecraftName = reader.GetString();
-                    var spacecraft = _model.Spacecrafts.FirstOrDefault(spacecraft => spacecraft.Name == spacecraftName);
+                    string? spacecraftName = reader.GetString();
+                    Spacecraft spacecraft =
+                        model.Spacecrafts.FirstOrDefault(spacecraft => spacecraft.Name == spacecraftName);
 
-                    if (string.IsNullOrEmpty(spacecraft.Name)) throw new JsonException();
+                    if (string.IsNullOrEmpty(spacecraft.Name))
+                    {
+                        throw new JsonException();
+                    }
 
                     journey.Spacecraft = spacecraft;
+
                     break;
                 }
                 case "numPassengers":
                 {
                     reader.Read();
                     journey.NumPassengers = reader.GetInt32();
+
                     break;
                 }
                 case "route":
                 {
                     reader.Read();
 
-                    if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
+                    if (reader.TokenType != JsonTokenType.StartArray)
+                    {
+                        throw new JsonException();
+                    }
 
                     while (reader.Read())
                     {
-                        if (reader.TokenType == JsonTokenType.EndArray) break;
+                        if (reader.TokenType == JsonTokenType.EndArray)
+                        {
+                            break;
+                        }
 
-                        if (reader.TokenType != JsonTokenType.String) throw new JsonException();
+                        if (reader.TokenType != JsonTokenType.String)
+                        {
+                            throw new JsonException();
+                        }
 
-                        var planetName = reader.GetString();
+                        string? planetName = reader.GetString();
 
-                        var planet = _model.Planets.FirstOrDefault(planet => planet.Name == planetName);
+                        Planet planet = model.Planets.FirstOrDefault(planet => planet.Name == planetName);
 
-                        if (string.IsNullOrEmpty(planet.Name)) throw new JsonException();
+                        if (string.IsNullOrEmpty(planet.Name))
+                        {
+                            throw new JsonException();
+                        }
 
                         journey.Route.Add(planet);
                     }
@@ -100,9 +141,14 @@ internal class JourneyConverter : JsonConverter<SpacecraftJourney>
 
         writer.WriteStartArray("route");
 
-        foreach (var planet in value.Route) writer.WriteStringValue(planet.Name);
+        foreach (Planet planet in value.Route)
+        {
+            writer.WriteStringValue(planet.Name);
+        }
 
         writer.WriteEndArray();
         writer.WriteEndObject();
     }
+
+    #endregion
 }

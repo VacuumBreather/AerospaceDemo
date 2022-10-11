@@ -11,14 +11,26 @@ using IContainer = Autofac.IContainer;
 
 namespace Aerospace;
 
-internal class Bootstrapper : BootstrapperBase
+internal sealed class Bootstrapper : BootstrapperBase
 {
+    #region Constructors and Destructors
+
     public Bootstrapper()
     {
         Initialize();
     }
 
-    protected IContainer? Container { get; private set; }
+    #endregion
+
+    #region Protected Properties
+
+    private IContainer? Container { get; set; }
+
+    #endregion
+
+    #region Protected Methods
+
+    protected override void BuildUp(object instance) => Container!.InjectProperties(instance);
 
     protected override void Configure()
     {
@@ -41,45 +53,41 @@ internal class Bootstrapper : BootstrapperBase
             .InstancePerDependency();
 
         // Register the single window manager for this container
-        builder.Register<IWindowManager>(c => new WindowManager()).InstancePerLifetimeScope();
+        builder.Register<IWindowManager>(_ => new WindowManager()).InstancePerLifetimeScope();
 
         // Register the single event aggregator for this container
-        builder.Register<IEventAggregator>(c => new EventAggregator()).InstancePerLifetimeScope();
+        builder.Register<IEventAggregator>(_ => new EventAggregator()).InstancePerLifetimeScope();
 
         Container = builder.Build();
     }
 
-    protected override IEnumerable<Assembly> SelectAssemblies()
-    {
-        return new[] {GetType().Assembly};
-    }
+    protected override IEnumerable<object>? GetAllInstances(Type service) =>
+        Container!.Resolve(typeof(IEnumerable<>).MakeGenericType(service)) as IEnumerable<object>;
 
-    protected override object GetInstance(Type service, string key)
+    protected override object GetInstance(Type service, string? key)
     {
         if (string.IsNullOrWhiteSpace(key))
         {
-            if (Container!.IsRegistered(service)) return Container!.Resolve(service);
+            if (Container!.IsRegistered(service))
+            {
+                return Container!.Resolve(service);
+            }
         }
         else
         {
-            if (Container!.IsRegisteredWithKey(key, service)) return Container!.ResolveKeyed(key, service);
+            if (Container!.IsRegisteredWithKey(key, service))
+            {
+                return Container!.ResolveKeyed(key, service);
+            }
         }
 
         throw new Exception($"Could not locate any instances of contract {key ?? service.Name}.");
     }
 
-    protected override IEnumerable<object>? GetAllInstances(Type service)
-    {
-        return Container!.Resolve(typeof(IEnumerable<>).MakeGenericType(service)) as IEnumerable<object>;
-    }
-
-    protected override void BuildUp(object instance)
-    {
-        Container!.InjectProperties(instance);
-    }
-
-    protected override async void OnStartup(object sender, StartupEventArgs e)
-    {
+    protected override async void OnStartup(object sender, StartupEventArgs e) =>
         await DisplayRootViewForAsync<MainViewModel>();
-    }
+
+    protected override IEnumerable<Assembly> SelectAssemblies() => new[] {GetType().Assembly};
+
+    #endregion
 }
