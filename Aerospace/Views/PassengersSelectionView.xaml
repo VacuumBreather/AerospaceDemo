@@ -11,12 +11,20 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Orientation="Horizontal">
+        <TextBlock
+            Margin="5"
+            VerticalAlignment="Center"
+            Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+            Text="Number of passengers:" />
         <xctk:IntegerUpDown
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Maximum="{Binding Journey.Spacecraft.Capacity, Mode=OneWay}"
             Minimum="0"
-            Value="{Binding Journey.NumPassengers}" />
-    </Grid>
+            Value="{Binding Journey.NumPassengers, Mode=TwoWay}" />
+    </StackPanel>
 </UserControl>

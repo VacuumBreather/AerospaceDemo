@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Aerospace.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Aerospace.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:RouteSelectionViewModel}"
@@ -11,8 +12,65 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <DockPanel>
-        <ListBox ItemsSource="{Binding Model.Planets, Mode=OneWay}"
-                 SelectedItem="{Binding SelectedPlanet, Mode=TwoWay}"/>
-        <ListView ItemsSource="{Binding Journey.Route, Mode=OneWay}" />
+        <materialDesign:Card
+            Margin="5"
+            Padding="10"
+            DockPanel.Dock="Left">
+            <ListBox
+                Width="100"
+                ItemsSource="{Binding Model.Planets, Mode=OneWay}"
+                SelectedItem="{Binding SelectedPlanet, Mode=TwoWay}" />
+        </materialDesign:Card>
+
+        <materialDesign:Card
+            Margin="5"
+            Padding="10"
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Right">
+            <StackPanel>
+                <TextBlock Style="{DynamicResource MaterialDesignCaptionTextBlock}" Text="Journey Overview" />
+                <Separator />
+                <TextBlock
+                    Margin="0,10,0,0"
+                    Style="{DynamicResource MaterialDesignBody2TextBlock}"
+                    Text="Total Distance: " />
+                <TextBlock>
+                    <Run Text="{Binding Journey.TotalTravelDistance, Mode=OneWay}" />
+                    <Run Text="million km" />
+                </TextBlock>
+                <TextBlock
+                    Margin="0,10,0,0"
+                    Style="{DynamicResource MaterialDesignBody2TextBlock}"
+                    Text="Remaining Distance: " />
+                <TextBlock>
+                    <Run Text="{Binding Journey.RemainingTravelDistance, Mode=OneWay}" />
+                    <Run Text="million km" />
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5" Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ListView ItemsSource="{Binding Journey.Route, Mode=OneWay}" SelectionMode="Single">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false" />
+                            <Setter Property="Height" Value="30" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <Button
+                    x:Name="RemoveLastPlanet"
+                    Grid.Row="1"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Left">
+                    <materialDesign:PackIcon Kind="TrashCan" />
+                </Button>
+            </Grid>
+        </materialDesign:Card>
     </DockPanel>
 </UserControl>

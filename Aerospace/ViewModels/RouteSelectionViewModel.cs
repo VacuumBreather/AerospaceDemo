@@ -15,6 +15,8 @@ internal class RouteSelectionViewModel : WizardStepViewModelBase
 
     #region Public Properties
 
+    public bool CanRemoveLastPlanet => Journey!.Route.Count > 1;
+
     public Planet SelectedPlanet
     {
         get => selectedPlanet;
@@ -26,7 +28,22 @@ internal class RouteSelectionViewModel : WizardStepViewModelBase
             {
                 Journey!.Route.Add(selectedPlanet);
             }
+
+            NotifyOfPropertyChange(nameof(CanRemoveLastPlanet));
         }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public void RemoveLastPlanet()
+    {
+        Journey!.Route.RemoveAt(Journey.Route.Count - 1);
+
+        SelectedPlanet = Journey.Route.Last();
+
+        NotifyOfPropertyChange(nameof(CanRemoveLastPlanet));
     }
 
     #endregion

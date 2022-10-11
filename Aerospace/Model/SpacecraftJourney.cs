@@ -22,6 +22,11 @@ internal class SpacecraftJourney : PropertyChangedBase
         name = "New Journey";
         spacecraft = model.Spacecrafts.First();
         Route.Add(model.Planets.First(planet => planet.Index == 3));
+        Route.CollectionChanged += (_, __) =>
+        {
+            NotifyOfPropertyChange(nameof(TotalTravelDistance));
+            NotifyOfPropertyChange(nameof(RemainingTravelDistance));
+        };
     }
 
     #endregion
@@ -42,6 +47,8 @@ internal class SpacecraftJourney : PropertyChangedBase
         set => Set(ref numPassengers, value);
     }
 
+    public double RemainingTravelDistance => 0;
+
     [JsonPropertyName("route")]
     public ObservableCollection<Planet> Route { get; } = new();
 
@@ -51,6 +58,8 @@ internal class SpacecraftJourney : PropertyChangedBase
         get => spacecraft;
         set => Set(ref spacecraft, value);
     }
+
+    public double TotalTravelDistance => 0;
 
     #endregion
 }

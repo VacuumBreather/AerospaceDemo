@@ -2,6 +2,7 @@
     x:Class="Aerospace.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Aerospace.Views.Converters"
     xmlns:local="clr-namespace:Aerospace"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">

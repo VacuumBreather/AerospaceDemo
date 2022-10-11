@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Aerospace.Model;
 using Caliburn.Micro;
 using JetBrains.Annotations;
@@ -37,9 +39,9 @@ internal class MainViewModel : Conductor<Screen>
 
     public ObservableCollection<SpacecraftJourney> ActiveJourneys { get; } = new();
 
-    public bool CanSaveJourneyAsync => SelectedJourney is not null;
+    public bool CanDeleteJourney => SelectedJourney is not null;
 
-    public Model.Model Model { get; private set; }
+    public bool CanSaveJourneyAsync => SelectedJourney is not null;
 
     public SpacecraftJourney? SelectedJourney
     {
@@ -48,8 +50,15 @@ internal class MainViewModel : Conductor<Screen>
         {
             Set(ref selectedJourney, value);
             NotifyOfPropertyChange(nameof(CanSaveJourneyAsync));
+            NotifyOfPropertyChange(nameof(CanDeleteJourney));
         }
     }
+
+    #endregion
+
+    #region Private Properties
+
+    private Model.Model Model { get; set; }
 
     #endregion
 
@@ -58,7 +67,11 @@ internal class MainViewModel : Conductor<Screen>
     [UsedImplicitly]
     public async void CreateJourneyAsync()
     {
-        bool? result = await windowManager.ShowDialogAsync(wizardViewModel);
+        IDictionary<string, object> settings = new Dictionary<string, object>();
+        settings["WindowStartupLocation"] = WindowStartupLocation.CenterScreen;
+        settings["ResizeMode"] = ResizeMode.NoResize;
+
+        bool? result = await windowManager.ShowDialogAsync(wizardViewModel, settings: settings);
 
         if ((result == true) &&
             wizardViewModel.Journey is { } journey)
@@ -66,6 +79,9 @@ internal class MainViewModel : Conductor<Screen>
             ActiveJourneys.Add(journey);
         }
     }
+
+    [UsedImplicitly]
+    public void DeleteJourney() => ActiveJourneys.Remove(SelectedJourney!);
 
     [UsedImplicitly]
     public async void LoadJourneyAsync()

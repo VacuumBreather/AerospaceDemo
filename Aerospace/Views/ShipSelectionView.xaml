@@ -10,11 +10,19 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Orientation="Horizontal">
+        <TextBlock
+            Margin="5"
+            VerticalAlignment="Center"
+            Style="{DynamicResource MaterialDesignCaptionTextBlock}"
+            Text="Spacecraft:" />
         <ComboBox
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ItemsSource="{Binding Model.Spacecrafts, Mode=OneWay}"
             SelectedItem="{Binding Journey.Spacecraft, Mode=TwoWay}" />
-    </Grid>
+    </StackPanel>
 </UserControl>
