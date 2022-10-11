@@ -18,8 +18,12 @@
             DockPanel.Dock="Left">
             <ListBox
                 Width="100"
-                ItemsSource="{Binding Model.Planets, Mode=OneWay}"
-                SelectedItem="{Binding SelectedPlanet, Mode=TwoWay}" />
+                ItemsSource="{Binding FilteredPlanets, Mode=OneWay}"
+                SelectedItem="{Binding SelectedPlanet, Mode=TwoWay}">
+                <Validation.ErrorTemplate>
+                    <ControlTemplate />
+                </Validation.ErrorTemplate>
+            </ListBox>
         </materialDesign:Card>
 
         <materialDesign:Card
@@ -35,7 +39,7 @@
                     Style="{DynamicResource MaterialDesignBody2TextBlock}"
                     Text="Total Distance: " />
                 <TextBlock>
-                    <Run Text="{Binding Journey.TotalTravelDistance, Mode=OneWay}" />
+                    <Run Text="{Binding Journey.TotalTravelDistance, StringFormat={}{0:F1}, Mode=OneWay}" />
                     <Run Text="million km" />
                 </TextBlock>
                 <TextBlock
@@ -43,7 +47,7 @@
                     Style="{DynamicResource MaterialDesignBody2TextBlock}"
                     Text="Remaining Distance: " />
                 <TextBlock>
-                    <Run Text="{Binding Journey.RemainingTravelDistance, Mode=OneWay}" />
+                    <Run Text="{Binding Journey.RemainingTravelDistance, StringFormat={}{0:F1}, Mode=OneWay}" />
                     <Run Text="million km" />
                 </TextBlock>
             </StackPanel>

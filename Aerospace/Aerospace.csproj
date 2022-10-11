@@ -9,11 +9,11 @@
 
   <ItemGroup>
     <None Remove="data.json" />
-    <None Remove="data\data.json" />
+    <None Remove="Data\data.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="data\data.json">
+    <Content Include="Data\data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
