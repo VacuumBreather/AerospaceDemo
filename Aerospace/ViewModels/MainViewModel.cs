@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Aerospace.Model;
 using Caliburn.Micro;
 using Microsoft.Win32;
@@ -17,6 +16,7 @@ internal class MainViewModel : Conductor<Screen>
     private readonly IWindowManager _windowManager;
     private readonly WizardViewModel _wizardViewModel;
     private SpacecraftJourney? _selectedJourney;
+    private JsonSerializerOptions? _serializationOptions;
 
     public MainViewModel(WizardViewModel wizardViewModel, IWindowManager windowManager)
     {
@@ -65,10 +65,11 @@ internal class MainViewModel : Conductor<Screen>
 
         if (result == true)
         {
-            string filename = openFileDialog.FileName;
+            var filename = openFileDialog.FileName;
 
             await using var readStream = File.OpenRead(filename);
-            var journey = await JsonSerializer.DeserializeAsync<SpacecraftJourney>(readStream);
+
+            var journey = await JsonSerializer.DeserializeAsync<SpacecraftJourney>(readStream, _serializationOptions);
 
             if (journey != null)
                 ActiveJourneys.Add(journey);
@@ -90,10 +91,10 @@ internal class MainViewModel : Conductor<Screen>
 
         if (result == true)
         {
-            string filename = saveFileDialog.FileName;
-            
+            var filename = saveFileDialog.FileName;
+
             await using var writeStream = File.OpenWrite(filename);
-            await JsonSerializer.SerializeAsync(writeStream, SelectedJourney!);
+            await JsonSerializer.SerializeAsync(writeStream, SelectedJourney!, _serializationOptions);
         }
     }
 
@@ -103,6 +104,15 @@ internal class MainViewModel : Conductor<Screen>
         await using var openStream = File.OpenRead(filename);
         Model = await JsonSerializer.DeserializeAsync<Model.Model>(openStream, cancellationToken: cancellationToken);
         _wizardViewModel.Model = Model;
+
+        _serializationOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Converters =
+            {
+                new JourneyConverter(Model)
+            }
+        };
     }
 
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
