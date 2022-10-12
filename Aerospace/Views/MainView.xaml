@@ -125,6 +125,12 @@
             </materialDesign:Card.Background>
             <Viewbox>
                 <Grid Width="1480" Height="957">
+                    <Path
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Data="{Binding SelectedJourney.Route, Converter={converters:RouteToPathConverter}, Mode=OneWay}"
+                        Stroke="Yellow"
+                        StrokeThickness="3" />
                     <Image
                         Width="512"
                         Height="512"
