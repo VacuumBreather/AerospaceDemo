@@ -67,13 +67,18 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <Button
-                    x:Name="RemoveLastPlanet"
+                <StackPanel
                     Grid.Row="1"
                     Margin="0,10,0,0"
-                    HorizontalAlignment="Left">
-                    <materialDesign:PackIcon Kind="TrashCan" />
-                </Button>
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+                    <Button x:Name="RemoveLastPlanet">
+                        <materialDesign:PackIcon Kind="TrashCan" />
+                    </Button>
+                    <Button x:Name="OptimizeRoute" Margin="5,0,0,0">
+                        Optimize
+                    </Button>
+                </StackPanel>
             </Grid>
         </materialDesign:Card>
     </DockPanel>

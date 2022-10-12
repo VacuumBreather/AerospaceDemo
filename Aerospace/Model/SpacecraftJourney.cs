@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Serialization;
 using Caliburn.Micro;
 
@@ -70,7 +69,7 @@ internal class SpacecraftJourney : PropertyChangedBase
     public double RemainingTravelDistance => AdjustedMaxTravelDistance - TotalTravelDistance;
 
     [JsonPropertyName("route")]
-    public ObservableCollection<Planet> Route { get; } = new();
+    public BindableCollection<Planet> Route { get; } = new();
 
     [JsonPropertyName("spacecraft")]
     public Spacecraft Spacecraft
@@ -89,6 +88,12 @@ internal class SpacecraftJourney : PropertyChangedBase
         get
         {
             var totalDistance = 0.0;
+
+            if (Route.Count < 2)
+            {
+                return totalDistance;
+            }
+
             Planet earth = Route.First(planet => planet.Index == 3);
             Planet previousPlanet = earth;
 
