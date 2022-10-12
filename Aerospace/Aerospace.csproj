@@ -10,14 +10,36 @@
   <ItemGroup>
     <None Remove="data.json" />
     <None Remove="Data\data.json" />
+    <None Remove="Images\ceres.png" />
+    <None Remove="Images\earth.png" />
+    <None Remove="Images\jupiter.png" />
+    <None Remove="Images\mars.png" />
+    <None Remove="Images\mercury.png" />
+    <None Remove="Images\neptune.png" />
+    <None Remove="Images\pluto.png" />
+    <None Remove="Images\saturn.png" />
+    <None Remove="Images\sol.png" />
     <None Remove="Images\starfield.png" />
+    <None Remove="Images\uranus.png" />
+    <None Remove="Images\venus.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\ceres.png" />
+    <Resource Include="Images\earth.png" />
+    <Resource Include="Images\jupiter.png" />
+    <Resource Include="Images\mars.png" />
+    <Resource Include="Images\mercury.png" />
+    <Resource Include="Images\neptune.png" />
+    <Resource Include="Images\pluto.png" />
+    <Resource Include="Images\saturn.png" />
+    <Resource Include="Images\sol.png" />
     <Resource Include="Images\starfield.png" />
+    <Resource Include="Images\uranus.png" />
+    <Resource Include="Images\venus.png" />
   </ItemGroup>
 
   <ItemGroup>

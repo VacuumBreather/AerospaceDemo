@@ -20,6 +20,17 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BitmapImage x:Key="Image.Starfield" UriSource="Images/starfield.png" />
+            <BitmapImage x:Key="Image.Sol" UriSource="Images/sol.png" />
+            <BitmapImage x:Key="Image.Mercury" UriSource="Images/mercury.png" />
+            <BitmapImage x:Key="Image.Venus" UriSource="Images/venus.png" />
+            <BitmapImage x:Key="Image.Earth" UriSource="Images/earth.png" />
+            <BitmapImage x:Key="Image.Mars" UriSource="Images/mars.png" />
+            <BitmapImage x:Key="Image.Ceres" UriSource="Images/ceres.png" />
+            <BitmapImage x:Key="Image.Jupiter" UriSource="Images/jupiter.png" />
+            <BitmapImage x:Key="Image.Saturn" UriSource="Images/saturn.png" />
+            <BitmapImage x:Key="Image.Uranus" UriSource="Images/uranus.png" />
+            <BitmapImage x:Key="Image.Neptune" UriSource="Images/neptune.png" />
+            <BitmapImage x:Key="Image.Pluto" UriSource="Images/pluto.png" />
 
             <Style TargetType="UserControl">
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
