@@ -86,13 +86,28 @@ internal class RouteSelectionViewModel : WizardStepViewModelBase
                     .DistinctBy(planet => planet.Index));
         }
 
-        while (optimizedRoute.Last().Index == 3)
+        var finalOptimizedRoute = new List<Planet>();
+
+        var previousIndex = -1;
+
+        foreach (Planet planet in optimizedRoute)
         {
-            optimizedRoute.RemoveAt(optimizedRoute.Count - 1);
+            if (planet.Index == previousIndex)
+            {
+                continue;
+            }
+
+            finalOptimizedRoute.Add(planet);
+            previousIndex = planet.Index;
+        }
+
+        while (finalOptimizedRoute.Last().Index == 3)
+        {
+            finalOptimizedRoute.RemoveAt(finalOptimizedRoute.Count - 1);
         }
 
         Journey!.Route.Clear();
-        Journey!.Route.AddRange(optimizedRoute);
+        Journey!.Route.AddRange(finalOptimizedRoute);
     }
 
     public void RemoveLastPlanet()
