@@ -10,18 +10,21 @@
   <ItemGroup>
     <None Remove="data.json" />
     <None Remove="Data\data.json" />
+    <None Remove="Images\starfield.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\starfield.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />
     <PackageReference Include="Caliburn.Micro" Version="4.0.212" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.4.0" />
+    <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
   </ItemGroup>

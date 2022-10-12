@@ -19,6 +19,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <BitmapImage x:Key="Image.Starfield" UriSource="Images/starfield.png" />
+
             <Style TargetType="UserControl">
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
                 <Setter Property="FontFamily" Value="{DynamicResource MaterialDesignFont}" />

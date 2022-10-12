@@ -22,6 +22,7 @@ internal class MainViewModel : Conductor<Screen>
     private readonly WizardViewModel wizardViewModel;
     private SpacecraftJourney? selectedJourney;
     private JsonSerializerOptions? serializationOptions;
+    private Model.Model model;
 
     #endregion
 
@@ -43,6 +44,12 @@ internal class MainViewModel : Conductor<Screen>
 
     public bool CanSaveJourneyAsync => SelectedJourney is not null;
 
+    public Model.Model Model
+    {
+        get => model;
+        private set => Set(ref model, value);
+    }
+
     public SpacecraftJourney? SelectedJourney
     {
         get => selectedJourney;
@@ -53,12 +60,6 @@ internal class MainViewModel : Conductor<Screen>
             NotifyOfPropertyChange(nameof(CanDeleteJourney));
         }
     }
-
-    #endregion
-
-    #region Private Properties
-
-    private Model.Model Model { get; set; }
 
     #endregion
 
@@ -142,10 +143,7 @@ internal class MainViewModel : Conductor<Screen>
 
     protected override Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        if (SelectedJourney is null)
-        {
-            SelectedJourney = ActiveJourneys.FirstOrDefault();
-        }
+        SelectedJourney ??= ActiveJourneys.FirstOrDefault();
 
         return base.OnActivateAsync(cancellationToken);
     }

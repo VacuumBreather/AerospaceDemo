@@ -8,6 +8,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Aerospace.Model"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
     xmlns:viewModels="clr-namespace:Aerospace.ViewModels"
     Title="MainView"
     Width="800"
@@ -117,6 +118,102 @@
             </StackPanel>
         </materialDesign:Card>
 
-        <materialDesign:Card Margin="5" Padding="10" />
+        <materialDesign:Card Margin="5" ClipContent="True">
+            <materialDesign:Card.Background>
+                <ImageBrush ImageSource="{StaticResource Image.Starfield}" />
+            </materialDesign:Card.Background>
+            <Grid>
+                <Ellipse
+                    Width="500"
+                    Height="500"
+                    Margin="-250,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Fill="Yellow" />
+                <ItemsControl ItemsSource="{Binding Model.Planets, Mode=OneWay}">
+                    <ItemsControl.Resources>
+                        <system:Double x:Key="SunRadius">400</system:Double>
+                        <system:Double x:Key="OrbitalRadiusFactor">250</system:Double>
+                    </ItemsControl.Resources>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas VerticalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type model:Planet}">
+                            <Grid>
+                                <Ellipse Stroke="DimGray" StrokeThickness="2">
+                                    <Ellipse.Width>
+                                        <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="({0} * {1} + {2})">
+                                            <Binding Mode="OneWay" Path="Index" />
+                                            <Binding Source="{StaticResource OrbitalRadiusFactor}" />
+                                            <Binding Source="{StaticResource SunRadius}" />
+                                        </MultiBinding>
+                                    </Ellipse.Width>
+                                    <Ellipse.Height>
+                                        <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="({0} * {1} + {2})">
+                                            <Binding Mode="OneWay" Path="Index" />
+                                            <Binding Source="{StaticResource OrbitalRadiusFactor}" />
+                                            <Binding Source="{StaticResource SunRadius}" />
+                                        </MultiBinding>
+                                    </Ellipse.Height>
+                                </Ellipse>
+                                <ContentControl Background="CornflowerBlue">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <Ellipse Fill="CornflowerBlue" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                    <ContentControl.Width>
+                                        <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="(sqrt({0} * 0.1))">
+                                            <Binding Mode="OneWay" Path="Diameter" />
+                                        </MultiBinding>
+                                    </ContentControl.Width>
+                                    <ContentControl.Height>
+                                        <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="(sqrt({0} * 0.1))">
+                                            <Binding Mode="OneWay" Path="Diameter" />
+                                        </MultiBinding>
+                                    </ContentControl.Height>
+                                    <ContentControl.RenderTransform>
+                                        <TranslateTransform>
+                                            <TranslateTransform.X>
+                                                <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="(({0} * {1} + {2}) * 0.5)">
+                                                    <Binding Mode="OneWay" Path="Index" />
+                                                    <Binding Source="{StaticResource OrbitalRadiusFactor}" />
+                                                    <Binding Source="{StaticResource SunRadius}" />
+                                                </MultiBinding>
+                                            </TranslateTransform.X>
+                                        </TranslateTransform>
+                                    </ContentControl.RenderTransform>
+                                </ContentControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Left">
+                                <Setter.Value>
+                                    <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="(({0} * {1} + {2}) * (-0.5))">
+                                        <Binding Mode="OneWay" Path="Index" />
+                                        <Binding Source="{StaticResource OrbitalRadiusFactor}" />
+                                        <Binding Source="{StaticResource SunRadius}" />
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Canvas.Top">
+                                <Setter.Value>
+                                    <MultiBinding Converter="{converters:MathExpressionConverter}" ConverterParameter="(({0} * {1} + {2}) * (-0.5))">
+                                        <Binding Mode="OneWay" Path="Index" />
+                                        <Binding Source="{StaticResource OrbitalRadiusFactor}" />
+                                        <Binding Source="{StaticResource SunRadius}" />
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Grid>
+        </materialDesign:Card>
     </DockPanel>
 </Window>
